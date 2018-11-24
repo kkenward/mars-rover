@@ -1,6 +1,8 @@
 {
   "name": "mars-rover",
   "version": "0.0.0",
+  "author": "Karen Kenward <karen@kenward.org>",
+  "repository": "github:kkenward/mars-rover",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
