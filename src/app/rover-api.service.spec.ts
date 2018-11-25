@@ -76,8 +76,94 @@ describe('RoverApiService', () => {
   });
 
   describe('moving the rover', () => {
-  	it('should move forward with command f');
-  	it('should move backward with command l');
+  	describe('forward movement with command f', () => {
+	  	it('should increase X if heading E', () => {
+	  		config.heading = 'E';
+	  		config.x = 0;
+	  		service.init(config);
+
+	  		service.move('f');
+
+	  		expect(service.x).toEqual(1);
+	  	});
+
+	  	it('should increase Y if heading S', () => {
+	  		config.heading = 'S';
+	  		config.y = 0;
+	  		service.init(config);
+
+	  		service.move('f');
+
+	  		expect(service.y).toEqual(1);
+	  	});
+
+			it('should decrease X if heading W', () => {
+	  		config.heading = 'W';
+	  		config.x = 1;
+	  		service.init(config);
+
+	  		service.move('f');
+
+	  		expect(service.x).toEqual(0);
+	  	});
+
+	  	it('should decrease Y if heading N', () => {
+	  		config.heading = 'N';
+	  		config.y = 1;
+	  		service.init(config);
+
+	  		service.move('f');
+
+	  		expect(service.y).toEqual(0);
+	  	});
+
+  		it('should wrap the grid');
+		});
+
+  	describe('backward movement for command b', () => {
+	  	it('should increase X if heading W', () => {
+	  		config.heading = 'W';
+	  		config.x = 0;
+	  		service.init(config);
+
+	  		service.move('b');
+
+	  		expect(service.x).toEqual(1);
+	  	});
+
+	  	it('should increase Y if heading N', () => {
+	  		config.heading = 'N';
+	  		config.y = 0;
+	  		service.init(config);
+
+	  		service.move('b');
+
+	  		expect(service.y).toEqual(1);
+	  	});
+
+			it('should decrease X if heading E', () => {
+	  		config.heading = 'E';
+	  		config.x = 1;
+	  		service.init(config);
+
+	  		service.move('b');
+
+	  		expect(service.x).toEqual(0);
+	  	});
+
+	  	it('should decrease Y if heading S', () => {
+	  		config.heading = 'S';
+	  		config.y = 1;
+	  		service.init(config);
+
+	  		service.move('b');
+
+	  		expect(service.y).toEqual(0);
+	  	});
+
+  		it('should wrap the grid');
+		});
+
   	it('should detect obstacles');
   	it('should report obstacles');
   	it('should wrap the grid');

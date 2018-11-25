@@ -29,4 +29,35 @@ export class RoverApiService {
   	}
   	this.heading = Compass[this.headingIndex];
   }
+
+  move(direction: String) {
+  	if(direction === 'f') {
+  		if(this.heading === 'E') {
+  			++this.x;
+  		}
+  		if(this.heading === 'S') {
+  			++this.y;
+  		}
+  		if(this.heading === 'W') {
+  			--this.x;
+  		}
+  		if(this.heading === 'N') {
+  			--this.y;
+  		}
+  	}
+  	if(direction === 'b') {
+  		if(this.heading === 'W') {
+  			++this.x;
+  		}
+  		if(this.heading === 'N') {
+  			++this.y;
+  		}
+  		if(this.heading === 'E') {
+  		  --this.x;
+  		}
+  		if(this.heading === 'S') {
+  		  --this.y;
+  		}
+  	}
+  }
 }
