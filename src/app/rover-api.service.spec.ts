@@ -41,7 +41,12 @@ describe('RoverApiService', () => {
   });
 
   describe('initializing the grid', () => {
-  	it('should set up a grid');
+  	it('should set up a grid', () => {
+  		service.init(config);
+
+  		expect(service.grid).toBeDefined();
+  	});
+
   	it('should include obstacles');
   });
 
@@ -116,8 +121,6 @@ describe('RoverApiService', () => {
 
 	  		expect(service.y).toEqual(0);
 	  	});
-
-  		it('should wrap the grid');
 		});
 
   	describe('backward movement for command b', () => {
@@ -160,12 +163,53 @@ describe('RoverApiService', () => {
 
 	  		expect(service.y).toEqual(0);
 	  	});
-
-  		it('should wrap the grid');
 		});
 
-  	it('should detect obstacles');
-  	it('should report obstacles');
-  	it('should wrap the grid');
+		describe('wrapping the grid', () => {
+			it('should wrap to 0 if x > max', () => {
+				config.x = 9;
+				config.heading = 'E';
+				service.init(config);
+
+				service.move('f');
+
+				expect(service.x).toEqual(0);
+			});
+
+			it('should wrap to max if x < 0', () => {
+				config.x = 0;
+				config.heading = 'W';
+				service.init(config);
+
+				service.move('f');
+
+				expect(service.x).toEqual(service.X_MAX - 1);
+			});
+
+			it('should wrap to 0 if y > max', () => {
+				config.y = 9;
+				config.heading = 'S';
+				service.init(config);
+
+				service.move('f');
+
+				expect(service.y).toEqual(0);
+			});
+
+			it('should wrap to max if y < 0', () => {
+				config.y = 0;
+				config.heading = 'N';
+				service.init(config);
+
+				service.move('f');
+
+				expect(service.y).toEqual(service.Y_MAX - 1);
+			});
+		});
+
+		describe('obstacles', () => {
+  		it('should detect obstacles');
+  		it('should report obstacles');
+  	});
   })
 });

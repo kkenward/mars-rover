@@ -11,6 +11,10 @@ export class RoverApiService {
 	headingIndex: number;
 	commands: string[];
 
+	X_MAX: number = 10;
+	Y_MAX: number = 10;
+	grid: boolean[][];
+
   constructor() { }
 
   init(config) {
@@ -19,6 +23,13 @@ export class RoverApiService {
   	this.heading = config.heading;
   	this.headingIndex = Compass[this.heading];
   	this.commands = config.commands;
+  	this.initGrid();
+  }
+
+  initGrid() {
+  	this.grid = new Array(this.X_MAX)
+      .fill([])
+      .map(() => new Array(this.Y_MAX).fill(false));
   }
 
   turn(direction: String) {
@@ -49,5 +60,10 @@ export class RoverApiService {
 		    break;
 		  }
 		}
+
+    if(this.x >= this.X_MAX) this.x = 0;
+    if(this.x < 0) this.x = this.X_MAX - 1;
+    if(this.y >= this.Y_MAX) this.y = 0;
+    if(this.y < 0) this.y = this.Y_MAX - 1;
   }
 }
