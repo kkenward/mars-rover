@@ -1,21 +1,25 @@
 import { TestBed } from '@angular/core/testing';
-
 import { RoverApiService } from './rover-api.service';
 
 describe('RoverApiService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+	let service: RoverApiService;
+	let config;
+
+  beforeEach(() => {
+  	TestBed.configureTestingModule({});
+  	service = TestBed.get(RoverApiService);
+  	config = { x: 4, y: 3, heading: 'S', commands: ['f', 'l', 'f', 'r', 'b'] };
+	});
 
   it('should be created', () => {
-    const service: RoverApiService = TestBed.get(RoverApiService);
     expect(service).toBeTruthy();
   });
 
   describe('initializing rover', () => {
     it('should be called with arguments', () => {
-	  	const service: RoverApiService = TestBed.get(RoverApiService);
 	  	spyOn(service, 'init');
 
-	  	service.init({x: 0, y: 0, heading: 'S', commands: ['r', 'f', 'l', 'b']});
+	  	service.init(config);
 
 	  	expect(service.init).toHaveBeenCalledWith(jasmine.objectContaining(
 	  		{
@@ -28,13 +32,11 @@ describe('RoverApiService', () => {
 	  });
 
   	it('should initialize the rover position', () => {
-	  	const service: RoverApiService = TestBed.get(RoverApiService);
+	  	service.init(config);
 
-	  	service.init({x: 0, y: 0, heading: 'S', commands: ['r', 'f', 'l', 'b']});
-
-	  	expect(service.x).toEqual(0);
-	  	expect(service.y).toEqual(0);
-	  	expect(service.heading).toEqual('S');
+	  	expect(service.x).toEqual(config.x);
+	  	expect(service.y).toEqual(config.y);
+	  	expect(service.heading).toEqual(config.heading);
 	  });
   });
 
@@ -45,9 +47,8 @@ describe('RoverApiService', () => {
 
   describe('turning the rover', () => {
   	it('should turn right with command r', () => {
-  		const service: RoverApiService = TestBed.get(RoverApiService);
+	  	service.init(config);
 
-	  	service.init({x: 0, y: 0, heading: 'S', commands: ['r', 'f', 'l', 'b']});
 	  	expect(service.heading).toEqual('S');
 	  	service.turn('r');
 	  	expect(service.heading).toEqual('W');
@@ -60,9 +61,8 @@ describe('RoverApiService', () => {
   	});
 
   	it('should turn left with command l', () => {
-  		const service: RoverApiService = TestBed.get(RoverApiService);
+	  	service.init(config);
 
-	  	service.init({x: 0, y: 0, heading: 'S', commands: ['r', 'f', 'l', 'b']});
 	  	expect(service.heading).toEqual('S');
 	  	service.turn('l');
 	  	expect(service.heading).toEqual('E');
