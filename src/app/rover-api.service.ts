@@ -31,33 +31,23 @@ export class RoverApiService {
   }
 
   move(direction: String) {
-  	if(direction === 'f') {
-  		if(this.heading === 'E') {
-  			++this.x;
-  		}
-  		if(this.heading === 'S') {
-  			++this.y;
-  		}
-  		if(this.heading === 'W') {
-  			--this.x;
-  		}
-  		if(this.heading === 'N') {
-  			--this.y;
-  		}
-  	}
-  	if(direction === 'b') {
-  		if(this.heading === 'W') {
-  			++this.x;
-  		}
-  		if(this.heading === 'N') {
-  			++this.y;
-  		}
-  		if(this.heading === 'E') {
-  		  --this.x;
-  		}
-  		if(this.heading === 'S') {
-  		  --this.y;
-  		}
-  	}
+  	switch(this.heading) {
+		  case 'N': {
+		    this.y = direction === 'f' ? this.y - 1 : this.y + 1;
+		    break;
+		  }
+		  case 'S': {
+		    this.y = direction === 'f' ? this.y + 1 : this.y - 1;
+		    break;
+		  }
+		  case 'E': {
+		    this.x = direction === 'f' ? this.x + 1 : this.x - 1;
+		    break;
+		  }
+		  case 'W': {
+		    this.x = direction === 'f' ? this.x - 1 : this.x + 1;
+		    break;
+		  }
+		}
   }
 }
