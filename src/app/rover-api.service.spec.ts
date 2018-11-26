@@ -248,6 +248,41 @@ describe('RoverApiService', () => {
   	});
   });
 
+  describe('parsing the commands array', () => {
+  	beforeEach(() => {
+  		spyOn(service, 'move').and.callThrough();
+  		spyOn(service, 'turn').and.callThrough();
+  	});
+
+  	it('should relocate the rover after a series of commands', () => {
+  		service.init(config);
+  		removeObstacles();
+
+  		service.parseCommands();
+
+  		expect(service.x).toBe(5);
+  		expect(service.y).toBe(3);
+  		expect(service.heading).toBe('S');
+  		expect(service.turn).toHaveBeenCalledTimes(2);
+  		expect(service.move).toHaveBeenCalledTimes(3);
+  		expect(service.missionStatus).toEqual('Mission Complete!');
+  	});
+
+  	it('should stop parsing when obstacle detected', () => {
+  		service.init(config);
+  		service.grid[4][4] = true;
+
+  		service.parseCommands();
+
+  		expect(service.x).toBe(4);
+  		expect(service.y).toBe(3);
+  		expect(service.heading).toBe('S');
+  		expect(service.turn).toHaveBeenCalledTimes(0);
+  		expect(service.move).toHaveBeenCalledTimes(1);
+  		expect(service.missionStatus).toEqual('Obstacle Detected at (4,4)!');
+  	});
+  });
+
 	function removeObstacles() {
 		// since obstacles are added randomly during init some tests need the grid to be reset
 		service.grid = new Array(service.X_MAX)

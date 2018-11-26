@@ -49,6 +49,15 @@ export class RoverApiService {
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
+  parseCommands() {
+    for(let command of this.commands) {
+      if(command === 'r' || command === 'l') this.turn(command);
+      if(command === 'f' || command === 'b') this.move(command);
+      if(this.missionStatus.startsWith('Obstacle Detected')) break;
+    }
+    if(!this.missionStatus.startsWith('Obstacle Detected')) this.missionStatus = 'Mission Complete!';
+  }
+
   turn(direction: String) {
   	if(direction === 'r') {
   		this.headingIndex = (this.headingIndex + 1) % 4;
