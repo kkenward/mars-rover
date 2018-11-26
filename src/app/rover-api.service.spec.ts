@@ -47,7 +47,12 @@ describe('RoverApiService', () => {
   		expect(service.grid).toBeDefined();
   	});
 
-  	it('should include obstacles');
+  	it('should include obstacles', () => {
+  		service.init(config);
+
+  		let obstacles = service.grid.filter((x) => x.some((y) => y));
+  		expect(obstacles.length>0).toBe(true);
+  	});
   });
 
   describe('turning the rover', () => {
@@ -86,6 +91,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'E';
 	  		config.x = 0;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('f');
 
@@ -96,6 +102,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'S';
 	  		config.y = 0;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('f');
 
@@ -106,6 +113,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'W';
 	  		config.x = 1;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('f');
 
@@ -116,6 +124,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'N';
 	  		config.y = 1;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('f');
 
@@ -128,6 +137,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'W';
 	  		config.x = 0;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('b');
 
@@ -138,6 +148,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'N';
 	  		config.y = 0;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('b');
 
@@ -148,6 +159,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'E';
 	  		config.x = 1;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('b');
 
@@ -158,6 +170,7 @@ describe('RoverApiService', () => {
 	  		config.heading = 'S';
 	  		config.y = 1;
 	  		service.init(config);
+	  		removeObstacles();
 
 	  		service.move('b');
 
@@ -170,6 +183,7 @@ describe('RoverApiService', () => {
 				config.x = 9;
 				config.heading = 'E';
 				service.init(config);
+	  		removeObstacles();
 
 				service.move('f');
 
@@ -180,6 +194,7 @@ describe('RoverApiService', () => {
 				config.x = 0;
 				config.heading = 'W';
 				service.init(config);
+	  		removeObstacles();
 
 				service.move('f');
 
@@ -190,6 +205,7 @@ describe('RoverApiService', () => {
 				config.y = 9;
 				config.heading = 'S';
 				service.init(config);
+	  		removeObstacles();
 
 				service.move('f');
 
@@ -200,6 +216,7 @@ describe('RoverApiService', () => {
 				config.y = 0;
 				config.heading = 'N';
 				service.init(config);
+	  		removeObstacles();
 
 				service.move('f');
 
@@ -208,13 +225,15 @@ describe('RoverApiService', () => {
 		});
 
 		describe('obstacles', () => {
-  		it('should detect obstacles', () => {
-  			config.x = 2;
+			beforeEach(() => {
+				config.x = 2;
   			config.y = 1;
   			config.heading = 'S';
   			service.init(config);
   			service.grid[2][2] = true;
+  		});
 
+  		it('should detect obstacles', () => {
   			service.move('f');
 
   			expect(service.x).toEqual(config.x);
@@ -222,16 +241,17 @@ describe('RoverApiService', () => {
   		});
 
   		it('should report obstacles', () => {
-  			config.x = 2;
-  			config.y = 1;
-  			config.heading = 'S';
-  			service.init(config);
-  			service.grid[2][2] = true;
-
   			service.move('f');
 
   			expect(service.missionStatus).toEqual('Obstacle Detected at (2,2)!');
   		});
   	});
-  })
+  });
+
+	function removeObstacles() {
+		// since obstacles are added randomly during init some tests need the grid to be reset
+		service.grid = new Array(service.X_MAX)
+	      .fill([])
+	      .map(() => new Array(service.Y_MAX).fill(false));
+	}
 });

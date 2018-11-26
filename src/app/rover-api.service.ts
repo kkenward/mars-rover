@@ -33,7 +33,20 @@ export class RoverApiService {
   	this.grid = new Array(this.X_MAX)
       .fill([])
       .map(() => new Array(this.Y_MAX).fill(false));
-    // TODO randomize obstacle
+
+    // Add 1 to 5 obstacles randomly to the grid
+    const obstacles = this.getRandomInt(1,5);
+    for(let i = 1; i <= obstacles; i++) {
+      let x = this.getRandomInt(0, this.X_MAX);
+      let y = this.getRandomInt(0, this.Y_MAX);
+      this.grid[x][y] = true;
+    }
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   turn(direction: String) {
