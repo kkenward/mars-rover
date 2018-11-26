@@ -208,8 +208,30 @@ describe('RoverApiService', () => {
 		});
 
 		describe('obstacles', () => {
-  		it('should detect obstacles');
-  		it('should report obstacles');
+  		it('should detect obstacles', () => {
+  			config.x = 2;
+  			config.y = 1;
+  			config.heading = 'S';
+  			service.init(config);
+  			service.grid[2][2] = true;
+
+  			service.move('f');
+
+  			expect(service.x).toEqual(config.x);
+  			expect(service.y).toEqual(config.y);
+  		});
+
+  		it('should report obstacles', () => {
+  			config.x = 2;
+  			config.y = 1;
+  			config.heading = 'S';
+  			service.init(config);
+  			service.grid[2][2] = true;
+
+  			service.move('f');
+
+  			expect(service.missionStatus).toEqual('Obstacle Detected at (2,2)!');
+  		});
   	});
   })
 });
