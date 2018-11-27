@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Compass } from './compass.enum';
+import { Grid } from './grid';
 
 @Injectable({
   providedIn: 'root'
@@ -13,40 +14,18 @@ export class RoverApiService {
 	commands: string[];
   missionStatus: string;
 
-	X_MAX: number = 10;
-	Y_MAX: number = 10;
-	grid: boolean[][];
+  grid: Grid;
 
   constructor() { }
 
-  init(config) {
+  init(config, grid) {
   	this.x = config.x;
   	this.y = config.y;
   	this.heading = config.heading;
   	this.headingIndex = Compass[this.heading];
   	this.commands = config.commands;
     this.missionStatus = 'Initializing...';
-  	this.initGrid();
-  }
-
-  initGrid() {
-  	this.grid = new Array(this.X_MAX)
-      .fill([])
-      .map(() => new Array(this.Y_MAX).fill(false));
-
-    // Add 1 to 5 obstacles randomly to the grid
-    const obstacles = this.getRandomInt(1,5);
-    for(let i = 1; i <= obstacles; i++) {
-      let x = this.getRandomInt(0, this.X_MAX);
-      let y = this.getRandomInt(0, this.Y_MAX);
-      this.grid[x][y] = true;
-    }
-  }
-
-  getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    this.grid = grid;
   }
 
   parseCommands() {
@@ -70,7 +49,7 @@ export class RoverApiService {
 
   move(direction: String) {
     const coords = this.getNewCoords(direction);
-    const detected = this.detectObstacles(coords);
+    const detected = this.grid.detectObstacles(coords);
 
     if(detected) {
       this.reportObstacles(coords);
@@ -102,12 +81,7 @@ export class RoverApiService {
       }
     }
 
-    if(x >= this.X_MAX) x = 0;
-    if(x < 0) x = this.X_MAX - 1;
-    if(y >= this.Y_MAX) y = 0;
-    if(y < 0) y = this.Y_MAX - 1;
-
-    return {x: x, y: y};
+    return this.grid.wrapCoords({x: x, y: y});
   }
 
   updateCoords(coords) {
@@ -116,12 +90,8 @@ export class RoverApiService {
     this.missionStatus = `Moved to coordinates (${this.x},${this.y}).`;
   }
 
-  detectObstacles(coords) {
-    return this.grid[coords.x][coords.y];
-  }
-
   reportObstacles(coords) {
     this.missionStatus = `Obstacle Detected at (${coords.x},${coords.y})!`;
-    console.log(this.missionStatus);
+    console.warn(this.missionStatus);
   }
 }
