@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { RoverApiService } from './rover-api.service';
 import { Grid } from './grid';
+import { Rover } from './rover';
 
 describe('RoverApiService', () => {
 	let grid: Grid;
+	let rover: Rover;
 	let service: RoverApiService;
 	let config;
 
@@ -11,66 +13,54 @@ describe('RoverApiService', () => {
   	TestBed.configureTestingModule({});
   	grid = new Grid();
   	grid.init(0);
-  	service = TestBed.get(RoverApiService);
   	config = { x: 4, y: 3, heading: 'S', commands: ['f', 'l', 'f', 'r', 'b'] };
+  	rover = new Rover();
+  	rover.init(config);
+  	service = TestBed.get(RoverApiService);
 	});
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('initializing rover', () => {
+  describe('initializing api', () => {
     it('should be called with arguments', () => {
-	  	spyOn(service, 'init');
+	  	spyOn(service, 'init').and.callThrough();
 
-	  	service.init(config, grid);
+	  	service.init(rover, grid);
 
-	  	expect(service.init).toHaveBeenCalledWith(jasmine.objectContaining(
-	  		{
-	  			x: jasmine.any(Number),
-	  		 	y: jasmine.any(Number),
-	  		 	heading: jasmine.any(String),
-	  		 	commands: jasmine.any(Array)
-  		 	}
-		 	), jasmine.any(Grid));
-	  });
-
-  	it('should initialize the rover position', () => {
-	  	service.init(config, grid);
-
-	  	expect(service.x).toEqual(config.x);
-	  	expect(service.y).toEqual(config.y);
-	  	expect(service.heading).toEqual(config.heading);
+	  	expect(service.init).toHaveBeenCalledWith(jasmine.any(Rover), jasmine.any(Grid));
+	  	expect(service.missionStatus).toBe('Initializing...');
 	  });
   });
 
   describe('turning the rover', () => {
   	it('should turn right with command r', () => {
-	  	service.init(config, grid);
+	  	service.init(rover, grid);
 
-	  	expect(service.heading).toEqual('S');
+	  	expect(service.rover.getHeading()).toEqual('S');
 	  	service.turn('r');
-	  	expect(service.heading).toEqual('W');
+	  	expect(service.rover.getHeading()).toEqual('W');
 	  	service.turn('r');
-	  	expect(service.heading).toEqual('N');
+	  	expect(service.rover.getHeading()).toEqual('N');
 	  	service.turn('r');
-	  	expect(service.heading).toEqual('E');
+	  	expect(service.rover.getHeading()).toEqual('E');
 	  	service.turn('r');
-	  	expect(service.heading).toEqual('S');
+	  	expect(service.rover.getHeading()).toEqual('S');
   	});
 
   	it('should turn left with command l', () => {
-	  	service.init(config, grid);
+	  	service.init(rover, grid);
 
-	  	expect(service.heading).toEqual('S');
+	  	expect(service.rover.getHeading()).toEqual('S');
 	  	service.turn('l');
-	  	expect(service.heading).toEqual('E');
+	  	expect(service.rover.getHeading()).toEqual('E');
 	  	service.turn('l');
-	  	expect(service.heading).toEqual('N');
+	  	expect(service.rover.getHeading()).toEqual('N');
 	  	service.turn('l');
-	  	expect(service.heading).toEqual('W');
+	  	expect(service.rover.getHeading()).toEqual('W');
 	  	service.turn('l');
-	  	expect(service.heading).toEqual('S');
+	  	expect(service.rover.getHeading()).toEqual('S');
   	});
   });
 
@@ -79,41 +69,49 @@ describe('RoverApiService', () => {
 	  	it('should increase X if heading E', () => {
 	  		config.heading = 'E';
 	  		config.x = 0;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('f');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.x).toEqual(1);
+	  		expect(coords.x).toEqual(1);
 	  	});
 
 	  	it('should increase Y if heading S', () => {
 	  		config.heading = 'S';
 	  		config.y = 0;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('f');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.y).toEqual(1);
+	  		expect(coords.y).toEqual(1);
 	  	});
 
 			it('should decrease X if heading W', () => {
 	  		config.heading = 'W';
 	  		config.x = 1;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('f');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.x).toEqual(0);
+	  		expect(coords.x).toEqual(0);
 	  	});
 
 	  	it('should decrease Y if heading N', () => {
 	  		config.heading = 'N';
 	  		config.y = 1;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('f');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.y).toEqual(0);
+	  		expect(coords.y).toEqual(0);
 	  	});
 		});
 
@@ -121,41 +119,49 @@ describe('RoverApiService', () => {
 	  	it('should increase X if heading W', () => {
 	  		config.heading = 'W';
 	  		config.x = 0;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('b');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.x).toEqual(1);
+	  		expect(coords.x).toEqual(1);
 	  	});
 
 	  	it('should increase Y if heading N', () => {
 	  		config.heading = 'N';
 	  		config.y = 0;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('b');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.y).toEqual(1);
+	  		expect(coords.y).toEqual(1);
 	  	});
 
 			it('should decrease X if heading E', () => {
 	  		config.heading = 'E';
 	  		config.x = 1;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('b');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.x).toEqual(0);
+	  		expect(coords.x).toEqual(0);
 	  	});
 
 	  	it('should decrease Y if heading S', () => {
 	  		config.heading = 'S';
 	  		config.y = 1;
-	  		service.init(config, grid);
+	  		rover.init(config);
+	  		service.init(rover, grid);
 
 	  		service.move('b');
+	  		const coords = service.rover.getCoords();
 
-	  		expect(service.y).toEqual(0);
+	  		expect(coords.y).toEqual(0);
 	  	});
 		});
 
@@ -165,14 +171,19 @@ describe('RoverApiService', () => {
   			config.y = 1;
   			config.heading = 'S';
   			spyOn(grid, 'detectObstacles').and.returnValue(true);
-  			service.init(config, grid);
+  			rover.init(config);
+	  		service.init(rover, grid);
   		});
 
   		it('should detect obstacles', () => {
+  			spyOn(rover, 'setCoords');
   			service.move('f');
+	  		const coords = service.rover.getCoords();
 
-  			expect(service.x).toEqual(config.x);
-  			expect(service.y).toEqual(config.y);
+  			expect(coords.x).toEqual(config.x);
+  			expect(coords.y).toEqual(config.y);
+  			expect(grid.detectObstacles).toHaveBeenCalled();
+  			expect(rover.setCoords).not.toHaveBeenCalled();
   		});
 
   		it('should report obstacles', () => {
@@ -190,13 +201,14 @@ describe('RoverApiService', () => {
   	});
 
   	it('should relocate the rover after a series of commands', () => {
-  		service.init(config, grid);
+  		service.init(rover, grid);
 
   		service.parseCommands();
+	  	const coords = service.rover.getCoords();
 
-  		expect(service.x).toBe(5);
-  		expect(service.y).toBe(3);
-  		expect(service.heading).toBe('S');
+  		expect(coords.x).toBe(5);
+  		expect(coords.y).toBe(3);
+  		expect(service.rover.getHeading()).toBe('S');
   		expect(service.turn).toHaveBeenCalledTimes(2);
   		expect(service.move).toHaveBeenCalledTimes(3);
   		expect(service.missionStatus).toEqual('Mission Complete!');
@@ -204,13 +216,14 @@ describe('RoverApiService', () => {
 
   	it('should stop parsing when obstacle detected', () => {
   		spyOn(grid, 'detectObstacles').and.returnValue(true);
-  		service.init(config, grid);
+  		service.init(rover, grid);
 
   		service.parseCommands();
+	  	const coords = service.rover.getCoords();
 
-  		expect(service.x).toBe(4);
-  		expect(service.y).toBe(3);
-  		expect(service.heading).toBe('S');
+  		expect(coords.x).toBe(4);
+  		expect(coords.y).toBe(3);
+  		expect(service.rover.getHeading()).toBe('S');
   		expect(service.turn).toHaveBeenCalledTimes(0);
   		expect(service.move).toHaveBeenCalledTimes(1);
   		expect(service.missionStatus).toEqual('Obstacle Detected at (4,4)!');

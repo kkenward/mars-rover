@@ -1,35 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Compass } from './compass.enum';
 import { Grid } from './grid';
+import { Rover } from './rover';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoverApiService {
-	x: number;
-	y: number;
-	heading: string;
-	headingIndex: number;
-
-	commands: string[];
-  missionStatus: string;
-
+  rover: Rover;
   grid: Grid;
+  missionStatus: string;
 
   constructor() { }
 
-  init(config, grid) {
-  	this.x = config.x;
-  	this.y = config.y;
-  	this.heading = config.heading;
-  	this.headingIndex = Compass[this.heading];
-  	this.commands = config.commands;
+  init(rover: Rover, grid: Grid) {
     this.missionStatus = 'Initializing...';
     this.grid = grid;
+    this.rover = rover;
   }
 
   parseCommands() {
-    for(let command of this.commands) {
+    const commands = this.rover.getCommands();
+    for(let command of commands) {
       if(command === 'r' || command === 'l') this.turn(command);
       if(command === 'f' || command === 'b') this.move(command);
       if(this.missionStatus.startsWith('Obstacle Detected')) break;
@@ -38,13 +30,18 @@ export class RoverApiService {
   }
 
   turn(direction: String) {
+    let heading = this.rover.getHeading();
+    let headingIndex = Compass[heading];
+
   	if(direction === 'r') {
-  		this.headingIndex = (this.headingIndex + 1) % 4;
+  		headingIndex = (headingIndex + 1) % 4;
   	} else if(direction === 'l') {
-  		this.headingIndex = (this.headingIndex + 4 - 1) % 4;
+  		headingIndex = (headingIndex + 4 - 1) % 4;
   	}
-  	this.heading = Compass[this.headingIndex];
-    this.missionStatus = `Turned to face ${this.heading}.`;
+
+    heading = Compass[headingIndex];
+  	this.rover.setHeading(heading);
+    this.missionStatus = `Turned to face ${heading}.`;
   }
 
   move(direction: String) {
@@ -59,10 +56,12 @@ export class RoverApiService {
   }
 
   getNewCoords(direction: String) {
-    let x = this.x;
-    let y = this.y;
+    const coords = this.rover.getCoords();
+    const heading = this.rover.getHeading();
+    let x = coords.x;
+    let y = coords.y;
 
-    switch(this.heading) {
+    switch(heading) {
       case 'N': {
         y = direction === 'f' ? y - 1 : y + 1;
         break;
@@ -85,9 +84,8 @@ export class RoverApiService {
   }
 
   updateCoords(coords) {
-    this.x = coords.x;
-    this.y = coords.y;
-    this.missionStatus = `Moved to coordinates (${this.x},${this.y}).`;
+    this.rover.setCoords(coords);
+    this.missionStatus = `Moved to coordinates (${coords.x},${coords.y}).`;
   }
 
   reportObstacles(coords) {
