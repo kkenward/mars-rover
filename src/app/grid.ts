@@ -42,6 +42,7 @@ export class Grid {
   }
 
   private addRandomObstacles(numObstacles?:number) {
+    if(numObstacles === undefined) numObstacles = this.getRandomInt(0, 5);
     for(let i = 1; i <= numObstacles; i++) {
       let x = this.getRandomInt(0, this.X_MAX);
       let y = this.getRandomInt(0, this.Y_MAX);
