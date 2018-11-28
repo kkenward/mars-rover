@@ -1,0 +1,7 @@
+<div class="terrain">
+	<div class="grid-container">
+	  <div class="row-container" *ngFor="let row of innerGrid; let i = index" [attr.data-index]="i">
+	    <div class="cell" *ngFor="let coord of row; let j = index" [attr.data-index]="j" [ngClass]="(coord === false) ? '' : 'obstacle_' + j"></div>
+	  </div>
+	</div>
+</div>

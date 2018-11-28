@@ -1,0 +1,85 @@
+.terrain {
+	background-image:
+    url("../assets/mars_surface.jpg");
+	width: 500px;
+	height: 500px;
+}
+
+.grid-container {
+	width: 500px;
+	height: 500px;
+}
+
+.row-container {
+	width: 500px;
+	height: 50px;
+}
+
+.cell {
+	border: solid black 1px;
+	width: 48px;
+	height: 48px;
+	display: inline-block;
+}
+
+div[class*='obstacle'] {
+	border: solid red 1px;
+}
+
+.obstacle_1 {
+	background-image: 
+		url("../assets/obstacle_1.jpg");
+}
+
+.obstacle_2 {
+	background-image: 
+		url("../assets/obstacle_2.jpg");
+}
+
+.obstacle_3 {
+	background-image: 
+		url("../assets/obstacle_3.jpg");
+}
+
+.obstacle_4 {
+	background-image: 
+		url("../assets/obstacle_4.jpg");
+}
+
+.obstacle_5 {
+	background-image: 
+		url("../assets/obstacle_5.jpg");
+}
+
+.obstacle_6 {
+	background-image: 
+		url("../assets/obstacle_6.jpg");
+}
+
+.obstacle_7 {
+	background-image: 
+		url("../assets/obstacle_3.jpg");
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+
+.obstacle_8 {
+	background-image: 
+		url("../assets/obstacle_4.jpg");
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+
+.obstacle_9 {
+	background-image: 
+		url("../assets/obstacle_5.jpg");
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+
+.obstacle_0 {
+	background-image: 
+		url("../assets/obstacle_6.jpg");
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
