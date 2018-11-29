@@ -3,6 +3,7 @@
     url("../assets/mars_surface.jpg");
 	width: 500px;
 	height: 500px;
+	margin: auto;
 }
 
 .grid-container {

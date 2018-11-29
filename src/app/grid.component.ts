@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import { Grid } from './grid';
 
 @Component({
@@ -21,6 +21,16 @@ export class GridComponent implements OnInit {
 
   	this.xmax = this.grid.getX_MAX();
   	this.ymax = this.grid.getY_MAX();
+    console.log('1 - grid init');
   }
 
+  ngAfterViewInit() {
+    console.log('4 - grid afterviewinit');
+  }
+
+  public getCellPosition(coords) {
+    const cellClass = `.x${coords.x}y${coords.y}`;
+    let rect = document.querySelector(cellClass).getBoundingClientRect();
+    return {top: rect.top, left: rect.left};
+  }
 }
