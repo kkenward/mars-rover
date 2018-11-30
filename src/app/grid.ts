@@ -31,13 +31,13 @@ export class Grid {
   }
 
   detectObstacles(coords) {
-  	return this.grid[coords.x][coords.y];
+  	return this.grid[coords.y][coords.x];
   }
 
   private fillGrid() {
-  	this.grid = new Array(this.X_MAX)
+  	this.grid = new Array(this.Y_MAX)
       .fill([])
-      .map(() => new Array(this.Y_MAX)
+      .map(() => new Array(this.X_MAX)
       	.fill(false));
   }
 
@@ -46,7 +46,7 @@ export class Grid {
     for(let i = 1; i <= numObstacles; i++) {
       let x = this.getRandomInt(0, this.X_MAX);
       let y = this.getRandomInt(0, this.Y_MAX);
-      this.grid[x][y] = true;
+      this.grid[y][x] = true;
     }
   }
 
