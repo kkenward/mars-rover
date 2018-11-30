@@ -3,9 +3,20 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <button (click)="launch()">Launch Mission</button>
+  <button (click)="launch()">
+    Launch Mission
+  </button>
 </div>
 
-<app-grid [grid]="grid" #gridRef></app-grid>
-<app-rover [rover]="rover" [config]="config" [getPosition]="gridRef.getCellPosition"></app-rover>
+<app-grid
+  [grid]="grid"
+  #gridRef>
+</app-grid>
+
+<app-rover
+  [rover]="rover"
+  [config]="config"
+  [getPosition]="gridRef.getCellPosition">
+</app-rover>
+
 <router-outlet></router-outlet>

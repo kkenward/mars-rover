@@ -1,7 +1,10 @@
 <div class="terrain">
 	<div class="grid-container">
 	  <div class="row-container" *ngFor="let row of innerGrid; let i = index">
-	    <div class="cell" *ngFor="let coord of row; let j = index" [ngClass]="(coord === false) ? 'x' + j + 'y' + i : ['x' + j + 'y' + i, 'obstacle_' + j]">({{j}},{{i}})</div>
+	    <div class="cell" *ngFor="let coord of row; let j = index"
+	    	[ngClass]="(coord === false) ? ['x' + j, 'y' + i] : ['x' + j, 'y' + i, 'obstacle_' + j]">
+	    	({{j}},{{i}})
+	    </div>
 	  </div>
 	</div>
 </div>
