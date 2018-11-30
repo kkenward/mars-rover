@@ -1,43 +1,43 @@
-import { Component, OnInit, OnChanges, AfterViewInit, Input } from '@angular/core';
-import { Rover } from './rover';
+import { Component, OnChanges, Input } from '@angular/core';
 
 @Component({
   selector: 'app-rover',
   templateUrl: './rover.component.html',
   styleUrls: ['./rover.component.css']
 })
-export class RoverComponent implements OnInit, OnChanges, AfterViewInit {
-	@Input('rover') rover: Rover;
-	@Input('config') config: Object;
-	@Input('getPosition') getPosition: Function;
+export class RoverComponent implements OnChanges {
+	@Input('x') x: number;
+	@Input('y') y: number;
+	@Input('heading') headingClass: string;
 
-	headingClass: string = 'E';
-	top: number = 70;
-	left: number = 150;
+	private top: number = 70;
+	private left: number = 150;
 
-  constructor() { }
-
-  ngOnInit() {
-  	this.rover.init(this.config);
-  }
+	private TOP_OFFSET = 165;
+	private LEFT_OFFSET = 57;
 
   ngOnChanges(changes) {
-  	if(changes.rover.firstChange) console.log('2 - rover onchanges firstChange');
-  	if(changes.rover && !changes.rover.firstChange) {
-			console.log('rover onchanges not firstChange');
-  		this.updatePosition();
+  	if(changes.x) {
+  		this.x = changes.x.currentValue;
   	}
+  	if(changes.y) {
+  		this.y = changes.y.currentValue;
+  	}
+  	if(changes.headingClass) {
+  		this.headingClass = changes.headingClass.currentValue;
+  	}
+  	this.updatePosition();
   }
 
-  ngAfterViewInit() {
-  	console.log('5 - rover afterviewinit');
-  }
-
-  updatePosition() {
-  	const cell = this.rover.getCoords();
-  	const position = this.getPosition(cell);
+  private updatePosition() {
+  	const position = this.calculatePosition(this.x, this.y);
   	this.top = position.top;
 	  this.left = position.left;
-	  this.headingClass = this.rover.getHeading();
+  }
+
+  private calculatePosition(x, y) {
+  	const top = (y * 50) + this.TOP_OFFSET;
+  	const left = (x * 50) + this.LEFT_OFFSET;
+  	return { top: top, left: left };
   }
 }

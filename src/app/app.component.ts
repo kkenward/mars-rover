@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Grid } from './grid';
-import { Rover } from './rover';
+import { RoverApiService } from './rover-api.service';
 
 @Component({
   selector: 'app-root',
@@ -8,12 +7,15 @@ import { Rover } from './rover';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'mars-rover';
-  grid = new Grid();
-  rover = new Rover();
-  config = {x: 2, y: 2, heading: 'W', commands: ['r']};
+  private apiService: RoverApiService;
 
-  launch() {
-  	console.log('clicked launch mission button');
+  private title = 'Mars Rover Challenge';
+
+	constructor(_apiService: RoverApiService) {
+		this.apiService = _apiService;
+	}
+
+  private launch() {
+  	this.apiService.parseCommands();
   }
 }

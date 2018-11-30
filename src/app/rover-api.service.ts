@@ -7,19 +7,32 @@ import { Rover } from './rover';
   providedIn: 'root'
 })
 export class RoverApiService {
-  rover: Rover;
-  grid: Grid;
-  missionStatus: string;
+  private missionStatus: string;
+  private rover = new Rover();
+  private grid = new Grid();
 
-  constructor() { }
-
-  init(rover: Rover, grid: Grid) {
+  constructor(){
+    // TODO read config from file or input?
+    const config = {x: 2, y: 2, heading: 'E', commands: ['f', 'r', 'f', 'r', 'f', 'l', 'l', 'f', 'r', 'b', 'b','l']};
+    this.rover.init(config);
+    this.grid.init(20); // TODO remove hardcoded 
     this.missionStatus = 'Initializing...';
-    this.grid = grid;
-    this.rover = rover;
+  }
+
+  getMissionStatus() {
+    return this.missionStatus;
+  }
+
+  getGrid() {
+    return this.grid;
+  }
+
+  getRover() {
+    return this.rover;
   }
 
   parseCommands() {
+    // TODO maybe add a wait to see rover update?
     const commands = this.rover.getCommands();
     for(let command of commands) {
       if(command === 'r' || command === 'l') this.turn(command);
@@ -55,7 +68,7 @@ export class RoverApiService {
     }
   }
 
-  getNewCoords(direction: String) {
+  private getNewCoords(direction: String) {
     const coords = this.rover.getCoords();
     const heading = this.rover.getHeading();
     let x = coords.x;
@@ -83,12 +96,12 @@ export class RoverApiService {
     return this.grid.wrapCoords({x: x, y: y});
   }
 
-  updateCoords(coords) {
+  private updateCoords(coords) {
     this.rover.setCoords(coords);
     this.missionStatus = `Moved to coordinates (${coords.x},${coords.y}).`;
   }
 
-  reportObstacles(coords) {
+  private reportObstacles(coords) {
     this.missionStatus = `Obstacle Detected at (${coords.x},${coords.y})!`;
     console.warn(this.missionStatus);
   }

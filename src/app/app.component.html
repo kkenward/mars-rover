@@ -1,4 +1,3 @@
-
 <div style="text-align:center">
   <h1>
     Welcome to {{ title }}!
@@ -9,14 +8,14 @@
 </div>
 
 <app-grid
-  [grid]="grid"
-  #gridRef>
+  [grid]="apiService.grid"
+  [status]="apiService.getMissionStatus()">
 </app-grid>
 
 <app-rover
-  [rover]="rover"
-  [config]="config"
-  [getPosition]="gridRef.getCellPosition">
+  [x]="apiService.rover.getCoords().x"
+  [y]="apiService.rover.getCoords().y"
+  [heading]="apiService.rover.getHeading()">
 </app-rover>
 
 <router-outlet></router-outlet>
