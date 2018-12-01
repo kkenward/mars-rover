@@ -17,7 +17,7 @@ export class Grid {
   	return this.Y_MAX;
   }
 
-  getGrid() {
+  getInnerGrid() {
   	return this.grid;
   }
 

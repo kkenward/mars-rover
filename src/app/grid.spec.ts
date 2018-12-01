@@ -21,15 +21,15 @@ describe('Grid', () => {
 
   		expect(testGrid).toEqual(jasmine.any(Grid));
   		expect(grid).toEqual(resultGrid);
-  		expect(grid.length).toEqual(testGrid.getX_MAX());
-  		expect(grid[0].length).toEqual(testGrid.getY_MAX());
+  		expect(grid.length).toEqual(testGrid.getY_MAX());
+  		expect(grid[0].length).toEqual(testGrid.getX_MAX());
   	});
 
   	it('should include obstacles', () => {
   		testGrid.init(1);
 
   		const grid = testGrid.getInnerGrid();
-  		const obstacles = grid.filter((x) => x.some((y) => y));
+  		const obstacles = grid.filter((y) => y.some((x) => x));
 
   		expect(obstacles.length>0).toBe(true);
   	});
@@ -81,9 +81,9 @@ describe('Grid', () => {
 			const grid = testGrid.getInnerGrid();
 
 			let coords = {};
-			for(let x = 0; x < xmax; x++) {
-				for(let y = 0; y < ymax; y++) {
-					if(grid[x][y]) coords = {x: x, y: y};
+			for(let y = 0; y < ymax; y++) {
+				for(let x = 0; x < xmax; x++) {
+					if(grid[y][x]) coords = {x: x, y: y};
 				}
 			}
 
