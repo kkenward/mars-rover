@@ -32,6 +32,10 @@ export class AppComponent {
     this.apiService.rover$.subscribe((rover$) => this.getValues(rover$));
 	}
 
+  updateMission(event) {
+    console.log('new mission', event);
+  }
+
   private getValues(rover$) {
     const copy = Object.assign({}, rover$);
 

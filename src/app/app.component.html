@@ -2,6 +2,11 @@
   <h1>
     Welcome to {{ title }}!
   </h1>
+
+  <app-mission-input
+    (nextMission)="updateMission($event)">
+  </app-mission-input>
+
   <button (click)="launch()">
     Launch Mission
   </button>

@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid.component';
 import { RoverComponent } from './rover.component';
+import { MissionInputComponent } from './mission-input.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     GridComponent,
-    RoverComponent
+    RoverComponent,
+    MissionInputComponent
   ],
   imports: [
     BrowserModule,
