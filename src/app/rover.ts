@@ -3,12 +3,14 @@ export class Rover {
 	private y: number;
 	private heading: string;
 	private commands: string[];
+	private status: string;
 
 	init(config: any) {
 		this.x = config.x;
 		this.y = config.y;
 		this.heading = config.heading;
 		this.commands = config.commands;
+		this.status = 'Initializing...';
 	}
 
 	getCommands() {
@@ -30,5 +32,13 @@ export class Rover {
 
 	setHeading(heading) {
 		this.heading = heading;
+	}
+
+	getStatus() {
+		return this.status;
+	}
+
+	setStatus(status) {
+		this.status = status;
 	}
 }

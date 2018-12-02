@@ -8,14 +8,14 @@
 </div>
 
 <app-grid
-  [grid]="apiService.grid"
-  [status]="apiService.getMissionStatus()">
+  [grid]="innerGrid"
+  [status]="status">
 </app-grid>
 
 <app-rover
-  [x]="apiService.rover.getCoords().x"
-  [y]="apiService.rover.getCoords().y"
-  [heading]="apiService.rover.getHeading()">
+  [x]="x"
+  [y]="y"
+  [heading]="heading">
 </app-rover>
 
 <router-outlet></router-outlet>

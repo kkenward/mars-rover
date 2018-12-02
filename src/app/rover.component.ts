@@ -31,7 +31,7 @@ export class RoverComponent implements OnChanges {
 
   private updatePosition() {
   	const position = this.calculatePosition(this.x, this.y);
-  	this.top = position.top;
+    this.top = position.top;
 	  this.left = position.left;
   }
 

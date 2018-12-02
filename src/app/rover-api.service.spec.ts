@@ -22,7 +22,7 @@ describe('RoverApiService', () => {
 
   describe('initializing api', () => {
     it('should be called with arguments', () => {
-	  	expect(service.getMissionStatus()).toBe('Initializing...');
+	  	expect(service.getRover().getStatus()).toBe('Initializing...');
 	  });
   });
 
@@ -171,7 +171,7 @@ describe('RoverApiService', () => {
   		it('should report obstacles', () => {
   			service.move('f');
 
-  			expect(service.getMissionStatus()).toEqual('Obstacle Detected at (2,2)!');
+  			expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (2,2)!');
   		});
   	});
   });
@@ -191,7 +191,7 @@ describe('RoverApiService', () => {
   		expect(service.getRover().getHeading()).toBe('S');
   		expect(service.turn).toHaveBeenCalledTimes(2);
   		expect(service.move).toHaveBeenCalledTimes(3);
-  		expect(service.getMissionStatus()).toEqual('Mission Complete!');
+  		expect(service.getRover().getStatus()).toEqual('Mission Complete!');
   	});
 
   	it('should stop parsing when obstacle detected', () => {
@@ -206,7 +206,7 @@ describe('RoverApiService', () => {
   		expect(service.getRover().getHeading()).toBe('S');
   		expect(service.turn).toHaveBeenCalledTimes(0);
   		expect(service.move).toHaveBeenCalledTimes(1);
-  		expect(service.getMissionStatus()).toEqual('Obstacle Detected at (4,4)!');
+  		expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (4,4)!');
   	});
   });
 });

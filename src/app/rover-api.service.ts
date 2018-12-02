@@ -2,44 +2,52 @@ import { Injectable } from '@angular/core';
 import { Compass } from './compass.enum';
 import { Grid } from './grid';
 import { Rover } from './rover';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoverApiService {
-  private missionStatus: string;
   private rover = new Rover();
   private grid = new Grid();
 
+  rover$: ReplaySubject<Object>;
+
   constructor(){
     // TODO read config from file or input?
-    const config = {x: 2, y: 2, heading: 'E', commands: ['f', 'r', 'f', 'r', 'f', 'l', 'l', 'f', 'r', 'b', 'b','l']};
+    const config = {x: 2, y: 2, heading: 'E', commands: ['f', 'r', 'f', 'r', 'f', 'l', 'l', 'f', 'r', 'b', 'b']};
     this.rover.init(config);
-    this.grid.init(20); // TODO remove hardcoded 
-    this.missionStatus = 'Initializing...';
-  }
+    this.grid.init();
+    this.rover.setStatus('Initializing...');
 
-  getMissionStatus() {
-    return this.missionStatus;
-  }
-
-  getGrid() {
-    return this.grid;
+    // TODO there must be another way to throttle the data stream
+    this.rover$ = new ReplaySubject(config.commands.length + 1, null);
   }
 
   getRover() {
     return this.rover;
   }
 
+  getGrid() {
+    return this.grid;
+  }
+
+  updateRover() {
+    const roverObj = {x: this.rover.getCoords().x, y: this.rover.getCoords().y, heading: this.rover.getHeading(), status: this.rover.getStatus()};
+    this.rover$.next(roverObj);
+  }
+
   parseCommands() {
-    // TODO maybe add a wait to see rover update?
     const commands = this.rover.getCommands();
     for(let command of commands) {
       if(command === 'r' || command === 'l') this.turn(command);
       if(command === 'f' || command === 'b') this.move(command);
-      if(this.missionStatus.startsWith('Obstacle Detected')) break;
+      if(this.rover.getStatus().startsWith('Obstacle Detected')) break;
     }
-    if(!this.missionStatus.startsWith('Obstacle Detected')) this.missionStatus = 'Mission Complete!';
+    if(!this.rover.getStatus().startsWith('Obstacle Detected')) {
+      this.rover.setStatus('Mission Complete!');
+      this.updateRover();
+    }
   }
 
   turn(direction: String) {
@@ -53,8 +61,9 @@ export class RoverApiService {
   	}
 
     heading = Compass[headingIndex];
-  	this.rover.setHeading(heading);
-    this.missionStatus = `Turned to face ${heading}.`;
+    this.rover.setHeading(heading);
+    this.rover.setStatus(`Turned to face ${heading}.`);
+    this.updateRover();
   }
 
   move(direction: String) {
@@ -98,11 +107,14 @@ export class RoverApiService {
 
   private updateCoords(coords) {
     this.rover.setCoords(coords);
-    this.missionStatus = `Moved to coordinates (${coords.x},${coords.y}).`;
+    this.rover.setStatus(`Moved to coordinates (${coords.x},${coords.y}).`);
+    this.updateRover();
   }
 
   private reportObstacles(coords) {
-    this.missionStatus = `Obstacle Detected at (${coords.x},${coords.y})!`;
-    console.warn(this.missionStatus);
+    const status = `Obstacle Detected at (${coords.x},${coords.y})!`
+    this.rover.setStatus(status);
+    this.updateRover();
+    console.warn(status);
   }
 }
