@@ -18,7 +18,7 @@ export class Rover {
 	}
 
 	getCoords() {
-		return {x: this.x, y: this.y};
+		return { x: this.x, y: this.y };
 	}
 
 	setCoords(coords) {

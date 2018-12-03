@@ -15,21 +15,15 @@ export class RoverApiService {
   private missionComplete = false;
 
   constructor(){
-    const config = {x: 0, y: 0, heading: 'E', commands: ['f', 'r', 'b', 'l'], status: 'Initializing...'};
+    const config = {
+      x: 0,
+      y: 0,
+      heading: 'E',
+      commands: ['f', 'r', 'b', 'l'],
+      status: 'Initializing...'
+    };
     this.initRover(config);
     this.grid.init();
-  }
-
-  getNext() {
-    if(this.missionComplete && this.nextIndex + 1 <= this.changeList.length) {
-      ++this.nextIndex;
-      return this.changeList[this.nextIndex];
-    }
-    return {};
-  }
-
-  getRover() {
-    return this.rover;
   }
 
   initRover(config) {
@@ -40,25 +34,44 @@ export class RoverApiService {
     this.updateRover();
   }
 
+  getRover() {
+    return this.rover;
+  }
+
   getGrid() {
     return this.grid;
   }
 
+  getNext() {
+    if( this.missionComplete && this.nextIndex + 1 <= this.changeList.length ) {
+      ++this.nextIndex;
+      return this.changeList[this.nextIndex];
+    }
+    return {};
+  }
+
   updateRover() {
-    const roverObj = {x: this.rover.getCoords().x, y: this.rover.getCoords().y, heading: this.rover.getHeading(), status: this.rover.getStatus()};
+    const roverObj = {
+      x: this.rover.getCoords().x,
+      y: this.rover.getCoords().y,
+      heading: this.rover.getHeading(),
+      status: this.rover.getStatus()
+    };
 
     this.changeList.push(roverObj);
-    if(roverObj.status.match(/Mission Complete!|Obstacle Detected/)) this.missionComplete = true;
+    if( roverObj.status.match(/Mission Complete!|Obstacle Detected/) ) {
+      this.missionComplete = true;
+    }
   }
 
   parseCommands() {
     const commands = this.rover.getCommands();
-    for(let command of commands) {
-      if(command === 'r' || command === 'l') this.turn(command);
-      if(command === 'f' || command === 'b') this.move(command);
-      if(this.rover.getStatus().match(/Obstacle Detected/)) break;
+    for( let command of commands ) {
+      if( command === 'r' || command === 'l' ) this.turn(command);
+      if( command === 'f' || command === 'b' ) this.move(command);
+      if( this.rover.getStatus().match(/Obstacle Detected/) ) break;
     }
-    if(!this.rover.getStatus().startsWith('Obstacle Detected')) {
+    if( !this.rover.getStatus().match(/Obstacle Detected/) ) {
       this.rover.setStatus('Mission Complete!');
       this.updateRover();
     }
@@ -68,15 +81,15 @@ export class RoverApiService {
     let heading = this.rover.getHeading();
     let headingIndex = Compass[heading];
 
-  	if(direction === 'r') {
+  	if( direction === 'r' ) {
   		headingIndex = (headingIndex + 1) % 4;
-  	} else if(direction === 'l') {
+  	} else if( direction === 'l' ) {
   		headingIndex = (headingIndex + 4 - 1) % 4;
   	}
 
     heading = Compass[headingIndex];
     this.rover.setHeading(heading);
-    this.rover.setStatus(`Turned to face ${heading}.`);
+    this.rover.setStatus(`Turned '${direction}' to face ${heading}.`);
     this.updateRover();
   }
 
@@ -84,10 +97,10 @@ export class RoverApiService {
     const coords = this.getNewCoords(direction);
     const detected = this.grid.detectObstacles(coords);
 
-    if(detected) {
+    if( detected ) {
       this.reportObstacles(coords);
     } else {
-      this.updateCoords(coords);
+      this.updateCoords(coords, direction);
     }
   }
 
@@ -97,7 +110,7 @@ export class RoverApiService {
     let x = coords.x;
     let y = coords.y;
 
-    switch(heading) {
+    switch( heading ) {
       case 'N': {
         y = direction === 'f' ? y - 1 : y + 1;
         break;
@@ -116,17 +129,17 @@ export class RoverApiService {
       }
     }
 
-    return this.grid.wrapCoords({x: x, y: y});
+    return this.grid.wrapCoords( {x: x, y: y} );
   }
 
-  private updateCoords(coords) {
+  private updateCoords(coords, direction) {
     this.rover.setCoords(coords);
-    this.rover.setStatus(`Moved to coordinates (${coords.x},${coords.y}).`);
+    this.rover.setStatus(`Moved '${direction}' to coordinates (${coords.x}, ${coords.y}).`);
     this.updateRover();
   }
 
   private reportObstacles(coords) {
-    const status = `Obstacle Detected at (${coords.x},${coords.y})!`
+    const status = `Obstacle Detected at (${coords.x}, ${coords.y})!`
     this.rover.setStatus(status);
     this.updateRover();
     console.warn(status);

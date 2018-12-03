@@ -10,22 +10,23 @@ export class RoverComponent implements OnChanges {
 	@Input('y') y: number;
 	@Input('heading') headingClass: string;
 
-	private top: number = 70;
-	private left: number = 150;
-
 	private TOP_OFFSET = 190;
 	private LEFT_OFFSET = 57;
 
+  top: number = this.TOP_OFFSET;
+  left: number = this.LEFT_OFFSET;
+
   ngOnChanges(changes) {
-  	if(changes.x) {
-  		this.x = changes.x.currentValue;
-  	}
-  	if(changes.y) {
-  		this.y = changes.y.currentValue;
-  	}
-  	if(changes.headingClass) {
-  		this.headingClass = changes.headingClass.currentValue;
-  	}
+  	if( changes.x ) {
+      this.x = changes.x.currentValue;
+    }
+  	if( changes.y ) {
+      this.y = changes.y.currentValue;
+    }
+  	if( changes.headingClass ) {
+      this.headingClass = changes.headingClass.currentValue;
+    }
+
   	this.updatePosition();
   }
 

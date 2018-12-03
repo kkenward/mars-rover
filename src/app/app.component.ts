@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RoverApiService } from './rover-api.service';
-import { Grid } from './grid';
 import { Rover } from './rover';
 
 @Component({
@@ -11,12 +10,12 @@ import { Rover } from './rover';
 export class AppComponent {
   private apiService: RoverApiService;
 
-  private title = 'Mars Rover Challenge';
+  title = 'Mars Rover Challenge';
 
   innerGrid: any[][];
   status: string = '';
-  x: number = 70;
-  y: number = 150;
+  x: number = 0;
+  y: number = 0;
   heading: string = 'E';
 
 	constructor(_apiService: RoverApiService) {
@@ -28,11 +27,21 @@ export class AppComponent {
     this.heading = rover.getHeading();
     this.x = rover.getCoords().x;
     this.y = rover.getCoords().y;
-
 	}
 
+  launch() {
+    setTimeout(() => { this.status = 'Launching in 5...4...3...2...1...'; }, 0);
+    let poller = setInterval(() => {
+      let value = this.apiService.getNext();
+      if( value ) this.setValues(value);
+      if( value.status.match(/Mission Complete!|Obstacle Detected/) ) clearInterval(poller);
+    }, 3000);
+
+    this.apiService.parseCommands();
+  }
+
   updateMission(event) {
-    event.status = 'New mission received';
+    event.status = 'New mission received.';
     this.apiService.initRover(event);
     this.setValues(event);
   }
@@ -45,15 +54,6 @@ export class AppComponent {
       this.x = copy.x;
       this.y = copy.y;
       this.heading = copy.heading;
-    },0);
-  }
-
-  private launch() {
-    let poller = setInterval(() => {
-      let value = this.apiService.getNext();
-      if(value) this.setValues(value);
-      if(value.status.match(/Mission Complete!|Obstacle Detected/)) clearInterval(poller);
-    }, 3000);
-    this.apiService.parseCommands();
+    }, 0);
   }
 }

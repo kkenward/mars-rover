@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { GridComponent } from './grid.component';
 import { RoverComponent } from './rover.component';
+import { MissionInputComponent } from './mission-input.component';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -13,7 +14,8 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent,
         GridComponent,
-        RoverComponent
+        RoverComponent,
+        MissionInputComponent
       ],
     }).compileComponents();
   }));

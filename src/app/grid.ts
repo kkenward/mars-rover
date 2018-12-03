@@ -22,10 +22,10 @@ export class Grid {
   }
 
 	wrapCoords(coords) {
-  	if(coords.x >= this.X_MAX) coords.x = 0;
-    if(coords.x < 0) coords.x = this.X_MAX - 1;
-    if(coords.y >= this.Y_MAX) coords.y = 0;
-    if(coords.y < 0) coords.y = this.Y_MAX - 1;
+  	if( coords.x >= this.X_MAX ) coords.x = 0;
+    if( coords.x < 0 ) coords.x = this.X_MAX - 1;
+    if( coords.y >= this.Y_MAX ) coords.y = 0;
+    if( coords.y < 0 ) coords.y = this.Y_MAX - 1;
 
     return coords;
   }
@@ -42,8 +42,8 @@ export class Grid {
   }
 
   private addRandomObstacles(numObstacles?:number) {
-    if(numObstacles === undefined) numObstacles = this.getRandomInt(0, 5);
-    for(let i = 1; i <= numObstacles; i++) {
+    if( numObstacles === undefined ) numObstacles = this.getRandomInt(0, 5);
+    for( let i = 1; i <= numObstacles; i++ ) {
       let x = this.getRandomInt(0, this.X_MAX);
       let y = this.getRandomInt(0, this.Y_MAX);
       this.grid[y][x] = true;

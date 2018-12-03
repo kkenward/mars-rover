@@ -171,7 +171,7 @@ describe('RoverApiService', () => {
   		it('should report obstacles', () => {
   			service.move('f');
 
-  			expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (2,2)!');
+  			expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (2, 2)!');
   		});
   	});
   });
@@ -206,7 +206,7 @@ describe('RoverApiService', () => {
   		expect(service.getRover().getHeading()).toBe('S');
   		expect(service.turn).toHaveBeenCalledTimes(0);
   		expect(service.move).toHaveBeenCalledTimes(1);
-  		expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (4,4)!');
+  		expect(service.getRover().getStatus()).toEqual('Obstacle Detected at (4, 4)!');
   	});
   });
 });

@@ -10,10 +10,10 @@ export class GridComponent implements OnChanges {
   @Input('status') status: string;
 
   ngOnChanges(changes) {
-    if(changes.status) {
+    if( changes.status ) {
       this.status = changes.status.currentValue;
     }
-    if(changes.grid && changes.grid.firstChange) {
+    if( changes.grid && changes.grid.firstChange ) {
       this.grid = changes.grid.currentValue;
     }
   }
