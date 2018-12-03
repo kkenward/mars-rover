@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Compass } from './compass.enum';
 import { Grid } from './grid';
 import { Rover } from './rover';
-import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +10,34 @@ export class RoverApiService {
   private rover = new Rover();
   private grid = new Grid();
 
-  rover$: ReplaySubject<Object>;
+  private changeList = [];
+  private nextIndex = -1;
+  private missionComplete = false;
 
   constructor(){
-    // TODO read config from file or input?
-    const config = {x: 2, y: 2, heading: 'E', commands: ['f', 'r', 'f', 'r', 'f', 'l', 'l', 'f', 'r', 'b', 'b']};
-    this.rover.init(config);
+    const config = {x: 0, y: 0, heading: 'E', commands: ['f', 'r', 'b', 'l'], status: 'Initializing...'};
+    this.initRover(config);
     this.grid.init();
-    this.rover.setStatus('Initializing...');
+  }
 
-    // TODO there must be another way to throttle the data stream
-    this.rover$ = new ReplaySubject(config.commands.length + 1, null);
+  getNext() {
+    if(this.missionComplete && this.nextIndex + 1 <= this.changeList.length) {
+      ++this.nextIndex;
+      return this.changeList[this.nextIndex];
+    }
+    return {};
   }
 
   getRover() {
     return this.rover;
+  }
+
+  initRover(config) {
+    this.missionComplete = false;
+    this.changeList = [];
+    this.nextIndex = -1;
+    this.rover.init(config);
+    this.updateRover();
   }
 
   getGrid() {
@@ -34,7 +46,9 @@ export class RoverApiService {
 
   updateRover() {
     const roverObj = {x: this.rover.getCoords().x, y: this.rover.getCoords().y, heading: this.rover.getHeading(), status: this.rover.getStatus()};
-    this.rover$.next(roverObj);
+
+    this.changeList.push(roverObj);
+    if(roverObj.status.match(/Mission Complete!|Obstacle Detected/)) this.missionComplete = true;
   }
 
   parseCommands() {
@@ -42,7 +56,7 @@ export class RoverApiService {
     for(let command of commands) {
       if(command === 'r' || command === 'l') this.turn(command);
       if(command === 'f' || command === 'b') this.move(command);
-      if(this.rover.getStatus().startsWith('Obstacle Detected')) break;
+      if(this.rover.getStatus().match(/Obstacle Detected/)) break;
     }
     if(!this.rover.getStatus().startsWith('Obstacle Detected')) {
       this.rover.setStatus('Mission Complete!');

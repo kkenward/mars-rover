@@ -29,25 +29,31 @@ export class AppComponent {
     this.x = rover.getCoords().x;
     this.y = rover.getCoords().y;
 
-    this.apiService.rover$.subscribe((rover$) => this.getValues(rover$));
 	}
 
   updateMission(event) {
-    console.log('new mission', event);
+    event.status = 'New mission received';
+    this.apiService.initRover(event);
+    this.setValues(event);
   }
 
-  private getValues(rover$) {
-    const copy = Object.assign({}, rover$);
+  private setValues(values) {
+    const copy = Object.assign({}, values);
 
     setTimeout(() => {
-    this.status = copy.status;
-    this.x = copy.x;
-    this.y = copy.y;
-    this.heading = copy.heading;
-    }, 5000);
+      this.status = copy.status;
+      this.x = copy.x;
+      this.y = copy.y;
+      this.heading = copy.heading;
+    },0);
   }
 
   private launch() {
+    let poller = setInterval(() => {
+      let value = this.apiService.getNext();
+      if(value) this.setValues(value);
+      if(value.status.match(/Mission Complete!|Obstacle Detected/)) clearInterval(poller);
+    }, 3000);
     this.apiService.parseCommands();
   }
 }
