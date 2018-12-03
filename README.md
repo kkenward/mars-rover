@@ -1,5 +1,5 @@
 # MarsRover
-Completed by Karen Kenward :rocket
+Completed by Karen Kenward :rocket:
 
 * Click the **[Launch Mission]** button to run the default rover mission.
 * Input a new mission in JSON format, click **[Change Mission]** and click **[Launch Mission]**.  
