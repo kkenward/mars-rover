@@ -13,7 +13,7 @@ export class RoverComponent implements OnChanges {
 	private top: number = 70;
 	private left: number = 150;
 
-	private TOP_OFFSET = 195;
+	private TOP_OFFSET = 190;
 	private LEFT_OFFSET = 57;
 
   ngOnChanges(changes) {
